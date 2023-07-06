@@ -46,18 +46,18 @@ export default function Home() {
           <input
             type="text"
             name="animal"
-            placeholder="Enter an animal"
+            placeholder="Hour of the day"
             value={animalInput}
             onChange={(e) => setAnimalInput(e.target.value)}
           />
           <input
             type="text"
             name="animalTwo"
-            placeholder="Enter an animal"
+            placeholder="Number of Bedrooms"
             value={animalInput2}
             onChange={(e) => setAnimalInput2(e.target.value)}
           />
-          <input type="submit" value="Generate names" />
+          <input type="submit" value="Ask Suggestions" />
         </form>
         <div>{result}</div>
       </main>
