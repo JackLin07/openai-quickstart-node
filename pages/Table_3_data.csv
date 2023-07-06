@@ -1,0 +1,6 @@
+,house_id,suburb,time_peak_energy_consumption,peak_energy_consumption,average_morning_energy_consumption,average_afternoon_energy_consumption,average_evening_energy_consumption,carbon_calculation_footprint,daily_temperature
+0,1,Suburb A,5/7/2023 23:00,16,6.666666666666667,7.0,13.0,10.415652173913044,8
+1,2,Suburb B,5/7/2023 23:00,11,2.6666666666666665,3.2,8.0,5.668695652173913,8
+2,3,Suburb C,5/7/2023 23:00,22,5.5,6.0,16.0,11.291304347826088,8
+3,4,Suburb D,5/7/2023 23:00,14,4.666666666666667,5.2,11.0,8.111304347826088,8
+4,5,Suburb E,5/7/2023 0:00,8,1.1666666666666667,1.0,3.2857142857142856,2.765217391304348,8
