@@ -4,6 +4,7 @@ import styles from "./index.module.css";
 
 export default function Home() {
   const [animalInput, setAnimalInput] = useState("");
+  const [animalInput2, setAnimalInput2] = useState("");
   const [result, setResult] = useState();
 
   async function onSubmit(event) {
@@ -14,14 +15,14 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ animal: animalInput }),
+        body: JSON.stringify({ animal: animalInput, animal2:animalInput2 }),
       });
 
       const data = await response.json();
       if (response.status !== 200) {
         throw data.error || new Error(`Request failed with status ${response.status}`);
       }
-
+      console.log(data.result)
       setResult(data.result);
       setAnimalInput("");
     } catch(error) {
@@ -49,9 +50,16 @@ export default function Home() {
             value={animalInput}
             onChange={(e) => setAnimalInput(e.target.value)}
           />
+          <input
+            type="text"
+            name="animalTwo"
+            placeholder="Enter an animal"
+            value={animalInput2}
+            onChange={(e) => setAnimalInput2(e.target.value)}
+          />
           <input type="submit" value="Generate names" />
         </form>
-        <div className={styles.result}>{result}</div>
+        <div>{result}</div>
       </main>
     </div>
   );
