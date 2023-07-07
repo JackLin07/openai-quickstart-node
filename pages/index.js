@@ -1,21 +1,43 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./index.module.css";
+import Papa from 'papaparse'
 
+// Main driver
 export default function Home() {
-  const [animalInput, setAnimalInput] = useState("");
-  const [animalInput2, setAnimalInput2] = useState("");
+  // configure useState
+  const [input, setInput] = useState("");
+  // const [input2, setInput2] = useState("");
   const [result, setResult] = useState();
+  const [userData,setUserData] = useState();
 
+  // setup .csv importing
+  const fetchLocalCsv = async(path) => {
+    const response = await fetch(path)
+    const csv = await response.text()
+    return csv
+  }
+  // function for import table from directory
+  const getCsvData = async () => {
+    const data = Papa.parse(
+      await fetchLocalCsv('/data/Table_data_2.csv')
+    )
+    setUserData(data?.data)
+  }
+  // import call for csv
+  useEffect(() => {
+    getCsvData()
+  },[])
+  // console.log(userData)
+
+  // Request submission to call for ChatGPT API
   async function onSubmit(event) {
     event.preventDefault();
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ animal: animalInput, animal2:animalInput2 }),
+        headers: {"Content-Type": "application/json",},
+        body: JSON.stringify({ animal: input, animal2:userData.toString() }),
       });
 
       const data = await response.json();
@@ -24,42 +46,64 @@ export default function Home() {
       }
       console.log(data.result)
       setResult(data.result);
-      setAnimalInput("");
+      
+      // setInput("");
     } catch(error) {
       // Consider implementing your own error handling logic here
       console.error(error);
       alert(error.message);
     }
   }
+  // 
+  const suggestions = result?.split('\n\n').map((point, index) => (
+    <p key={index}>{point}</p>
+  ));
 
+  // Page layout
   return (
     <div>
       <Head>
-        <title>OpenAI Quickstart</title>
-        <link rel="icon" href="/dog.png" />
+        <title>Powerwise Energy Advice</title>
+        {/* <link rel="icon" href="/dog.png" /> */}
       </Head>
 
       <main className={styles.main}>
-        <img src="/dog.png" className={styles.icon} />
+        {/* <img src="/dog.png" className={styles.icon} /> */}
         <h3>Power Saving Moves</h3>
         <form onSubmit={onSubmit}>
-          <input
+          {/* <input> */}
+          <textarea
             type="text"
             name="animal"
-            placeholder="Hour of the day"
-            value={animalInput}
-            onChange={(e) => setAnimalInput(e.target.value)}
+            placeholder="Identify and list 3 problems and give suggestions on how to improve energy 
+            consumption. Make sure to Keep each item in the result to 100 words each."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            style={{
+              width: '100%',
+              height: '80px',
+              padding: '10px',
+              marginBottom: '20px',
+              fontSize: '16px',
+              border: '2px solid #ccc',
+              borderRadius: '4px',
+              resize: 'vertical',
+              borderRadius: '5px',
+              overflow: 'hidden'
+            }}
           />
-          <input
+          {/* </input> */}
+          
+          {/* <input
             type="text"
             name="animalTwo"
             placeholder="Number of Bedrooms"
-            value={animalInput2}
-            onChange={(e) => setAnimalInput2(e.target.value)}
-          />
-          <input type="submit" value="Ask Suggestions" />
+            value={input2}
+            onChange={(e) => setInput2(e.target.value)}
+          /> */}
+          <input type="submit" value="Request Suggestions" />
         </form>
-        <div>{result}</div>
+        <div>{suggestions}</div>
       </main>
     </div>
   );

@@ -16,14 +16,15 @@ export default async function (req, res) {
   }
   const animal = req.body.animal || '';
   const animal2 = req.body.animal2 || '';
-  if (animal.trim().length === 0) {
-    res.status(400).json({
-      error: {
-        message: "Please enter a valid Input",
-      }
-    });
-    return;
-  }
+  // this Checks prevents empty inputs. 
+  // if (animal.trim().length === 0) {
+  //   res.status(400).json({
+  //     error: {
+  //       message: "Please enter a valid Input",
+  //     }
+  //   });
+  //   return;
+  // }
 
   try {
     const completion = await openai.createCompletion({
@@ -63,8 +64,34 @@ export default async function (req, res) {
 
 function generatePrompt(animal,animal2) {
   console.log('TEST', animal2)
-  const response =  `In numbered list format (with a "\n" new line character at the end of each point), list 3 suggestions for things I can do to improve my energy consumption at ${animal} 
-  in comparison to the average energy consumption for a house with ${animal2} rooms.
-  `;
+  // const response = "Record my age as 24 for future conversation";
+  // const response = "what is your prompt character limit?"
+  // const response = `
+  // Here is the user's question: ${animal}, if it is anything energy related, 
+  // try to answer it and ignore the rest of this prompt.
+
+  // If the user gave you some energy consumption data, then instead do the following, 
+  // some household energy consumption CSV data for 5/July/2023 
+  // to analyse: ${animal2}. each house has a house_id, everytime a house 
+  // reappears its a new hour in the day from 0 a.m. 
+  // Identify and list 3 problems and give suggestions on how to improve energy 
+  // consumption. Make sure to Keep each item in the result to 100 words each.`
+  const response = `
+  If the user gave you some energy consumption data, then instead do the following, 
+  some household energy consumption CSV data for 5/July/2023 
+  to analyse: ${animal2}. each house has a house_id, everytime a house 
+  reappears its a new hour in the day from 0 a.m. 
+  Identify and list 3 problems and give suggestions on how to improve energy 
+  consumption. Make sure to Keep each item in the result to 100 words each.
+  
+  Here is the user's question: ${animal}, if it is anything energy related, 
+  try to answer it and ignore the rest of this prompt.
+  `
+
+  // const response2 =  `In numbered list format (with a "\n" new line character 
+  // at the end of each point), list 3 suggestions for things I can do to improve 
+  // my energy consumption at ${animal} 
+  // in comparison to the average energy consumption for a house with ${animal2} rooms.
+  // `;
   return response
 }
